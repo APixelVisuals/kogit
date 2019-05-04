@@ -23,3 +23,9 @@ if [ ! -f ~/.config/kogit/access-token ]; then
     exit
 
 fi
+
+# Read config files
+ACCESS_TOKEN=$(cat ~/.config/kogit/access-token)
+
+# Make request
+RESULT=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1)
