@@ -1,1 +1,25 @@
 #!/bin/bash
+
+# Make config directory
+if [ ! -d ~/.config/kogit/ ]; then
+
+    mkdir -p ~/.config/kogit/
+
+fi
+
+# Set token
+if [ "$1" == "-t" ] || [ "$1" == "--token" ]; then
+
+    echo "$2" > ~/.config/kogit/access-token
+    echo "Your GitHub access token has been set"
+    exit
+
+fi
+
+# No access token
+if [ ! -f ~/.config/kogit/access-token ]; then
+
+    echo "You don't have a GitHub access token set. You can set one by using \`kogit -t ACCESS_TOKEN\`"
+    exit
+
+fi
