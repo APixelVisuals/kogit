@@ -27,7 +27,7 @@ fi
 # Read config files
 ACCESS_TOKEN=$(cat ~/.config/kogit/access-token)
 
-# Make request
+# Make requests
 RESULT=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1)
 
 # Define vars
@@ -83,3 +83,9 @@ do
 
 done
 printf "\n"
+
+# Stars
+echo -e "${COLOR}Stars:${NC} $STARS"
+
+# Watchers
+echo -e "${COLOR}Watchers:${NC} $WATCHERS"
