@@ -29,3 +29,57 @@ ACCESS_TOKEN=$(cat ~/.config/kogit/access-token)
 
 # Make request
 RESULT=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1)
+
+# Define vars
+ID=$(echo "$RESULT" | jq -r ".id")
+FULL_NAME=$(echo "$RESULT" | jq -r ".full_name")
+PRIVATE=$(echo "$RESULT" | jq -r ".private")
+WEBSITE=$(echo "$RESULT" | jq -r ".homepage")
+STARS=$(echo "$RESULT" | jq -r ".stargazers_count")
+WATCHERS=$(echo "$RESULT" | jq -r ".watchers_count")
+PRIMARY_LANGUAGE=$(echo "$RESULT" | jq -r ".language")
+
+# Define formatting vars
+NC='\033[0m'
+COLOR='\033[0;93m'
+
+case "$PRIMARY_LANGUAGE" in
+
+    # Red
+    "HTML") COLOR='\033[0;31m';;
+
+    # Yellow
+    "Java") COLOR='\033[0;33m';;
+
+    # Blue
+    "CSS" | "TypeScript" | "Python" | "C++") COLOR='\033[0;34m';;
+
+    # Magenta
+    "C#" | "TypeScript") COLOR='\033[0;35m';;
+
+    # Light Gray
+    "C") COLOR='\033[0;37m';;
+
+    # Bright yellow
+    "JavaScript") COLOR='\033[0;93m';;
+
+esac
+
+# Title
+for i in $(seq 1 $((${#FULL_NAME} + ${#ID} + 7)));
+do
+
+    printf "="
+
+done
+printf "\n"
+
+echo -e "  ${COLOR}$FULL_NAME ($ID)${NC}"
+
+for i in $(seq 1 $((${#FULL_NAME} + ${#ID} + 7)));
+do
+
+    printf "="
+
+done
+printf "\n"
