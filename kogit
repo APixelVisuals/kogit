@@ -24,6 +24,9 @@ if [ ! -f ~/.config/kogit/access-token ]; then
 
 fi
 
+# Clear screen
+clear
+
 # Read config files
 ACCESS_TOKEN=$(cat ~/.config/kogit/access-token)
 
@@ -91,23 +94,16 @@ GET_COLOR() {
 GET_COLOR "$PRIMARY_LANGUAGE"
 
 # Title
-for i in $(seq 1 $((${#FULL_NAME} + ${#ID} + 7)));
-do
+BORDER_LENGTH=$((${#FULL_NAME} + ${#ID} + 7))
+SPACES_LENGTH=$(( ($(tput cols) / 2) - ($BORDER_LENGTH / 2) ))
+BORDER=""
+SPACES=""
+for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
+for i in $(seq 1 $BORDER_LENGTH); do BORDER="$BORDER="; done
 
-    printf "="
-
-done
-printf "\n"
-
-echo -e "  ${COLOR}$FULL_NAME ($ID)${NC}"
-
-for i in $(seq 1 $((${#FULL_NAME} + ${#ID} + 7)));
-do
-
-    printf "="
-
-done
-printf "\n"
+echo "$SPACES$BORDER"
+echo -e "$SPACES  ${COLOR}$FULL_NAME ($ID)${NC}"
+echo "$SPACES$BORDER"
 
 # Stars
 echo -e "${COLOR}Stars:${NC} $STARS"
