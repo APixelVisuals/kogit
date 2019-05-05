@@ -104,12 +104,13 @@ for i in $(seq 1 $BORDER_LENGTH); do BORDER="$BORDER="; done
 echo "$SPACES$BORDER"
 echo -e "$SPACES  ${COLOR}$FULL_NAME ($ID)${NC}"
 echo "$SPACES$BORDER"
+echo
 
-# Stars
-echo -e "${COLOR}Stars:${NC} $STARS"
-
-# Watchers
-echo -e "${COLOR}Watchers:${NC} $WATCHERS"
+# Stars + watchers
+STARS_WATCHERS="Stars: $STARS     Watchers: $WATCHERS"
+STARS_WATCHERS_SPACES=""
+for i in $(seq 1 $(( ($(tput cols) / 2) - (${#STARS_WATCHERS} / 2) ))); do STARS_WATCHERS_SPACES="$STARS_WATCHERS_SPACES "; done
+echo -e "$STARS_WATCHERS_SPACES${COLOR}Stars:${NC} $STARS     ${COLOR}Watchers:${NC} $WATCHERS"
 
 # Languages
 for LANGUAGE in $LANGUAGE_KEYS;
