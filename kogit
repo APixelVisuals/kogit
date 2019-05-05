@@ -37,11 +37,12 @@ LANGUAGES=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com
 # Define vars
 ID=$(echo "$RESULT" | jq -r ".id")
 FULL_NAME=$(echo "$RESULT" | jq -r ".full_name")
-PRIVATE=$(echo "$RESULT" | jq -r ".private")
+DESCRIPTION=$(echo "$RESULT" | jq -r ".description")
 WEBSITE=$(echo "$RESULT" | jq -r ".homepage")
 STARS=$(echo "$RESULT" | jq -r ".stargazers_count")
 WATCHERS=$(echo "$RESULT" | jq -r ".watchers_count")
 PRIMARY_LANGUAGE=$(echo "$RESULT" | jq -r ".language")
+PRIVATE=$(echo "$RESULT" | jq -r ".private")
 
 # Set language percents
 LANGUAGE_KEYS=$(echo "$LANGUAGES" | jq -r "keys[]")
@@ -98,12 +99,26 @@ BORDER_LENGTH=$((${#FULL_NAME} + ${#ID} + 7))
 SPACES_LENGTH=$(( ($(tput cols) / 2) - ($BORDER_LENGTH / 2) ))
 BORDER=""
 SPACES=""
-for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 for i in $(seq 1 $BORDER_LENGTH); do BORDER="$BORDER="; done
+for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 
 echo "$SPACES$BORDER"
 echo -e "$SPACES  ${COLOR}$FULL_NAME ($ID)${NC}"
 echo "$SPACES$BORDER"
+
+# Description
+DESCRIPTION_LINES_COUNT=$(( ${#DESCRIPTION} / $(tput cols) ))
+
+if (( ${#DESCRIPTION} >= $(tput cols) )); then DESCRIPTION_FIRST_LINES=$(echo $DESCRIPTION | cut -c -$(( ${DESCRIPTION_LINES_COUNT%.*} * $(tput cols) ))); fi
+DESCRIPTION_LAST_LINE=$(echo $DESCRIPTION | cut -c $(( (${DESCRIPTION_LINES_COUNT%.*} * $(tput cols)) + 1 ))-)
+
+SPACES_LENGTH=$(( ($(tput cols) / 2) - (${#DESCRIPTION_LAST_LINE} / 2) ))
+SPACES=""
+for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
+
+echo
+if (( ${#DESCRIPTION} >= $(tput cols) )); then echo "$DESCRIPTION_FIRST_LINES"; fi
+echo "$SPACES$DESCRIPTION_LAST_LINE"
 echo
 
 # Stars + watchers
