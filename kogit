@@ -29,6 +29,7 @@ ACCESS_TOKEN=$(cat ~/.config/kogit/access-token)
 
 # Make requests
 RESULT=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1)
+LANGUAGES=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1/languages)
 
 # Define vars
 ID=$(echo "$RESULT" | jq -r ".id")
@@ -39,31 +40,55 @@ STARS=$(echo "$RESULT" | jq -r ".stargazers_count")
 WATCHERS=$(echo "$RESULT" | jq -r ".watchers_count")
 PRIMARY_LANGUAGE=$(echo "$RESULT" | jq -r ".language")
 
-# Define formatting vars
+# Set language percents
+LANGUAGE_KEYS=$(echo "$LANGUAGES" | jq -r "keys[]")
+TOTAL_BYTES=0
+
+for LANGUAGE in $LANGUAGE_KEYS;
+do
+
+    TOTAL_BYTES=$(($TOTAL_BYTES + $(echo "$LANGUAGES" | jq ".$LANGUAGE")))
+
+done
+
+for LANGUAGE in $LANGUAGE_KEYS;
+do
+
+    PERCENT=$(echo "scale=5; $(echo "$LANGUAGES" | jq ".$LANGUAGE") / $TOTAL_BYTES * 100" | bc)
+    printf -v PERCENT "%.2f" "$PERCENT"
+    LANGUAGES=$(echo "$LANGUAGES" | jq ".$LANGUAGE = $PERCENT")
+
+done
+
+# Define no color var + formatting function
 NC='\033[0m'
-COLOR='\033[0;93m'
+GET_COLOR() {
+    case "$1" in
 
-case "$PRIMARY_LANGUAGE" in
+        # Red
+        "HTML") COLOR='\033[0;31m';;
 
-    # Red
-    "HTML") COLOR='\033[0;31m';;
+        # Yellow
+        "Java") COLOR='\033[0;33m';;
 
-    # Yellow
-    "Java") COLOR='\033[0;33m';;
+        # Blue
+        "CSS" | "TypeScript" | "Python" | "C++") COLOR='\033[0;34m';;
 
-    # Blue
-    "CSS" | "TypeScript" | "Python" | "C++") COLOR='\033[0;34m';;
+        # Magenta
+        "C#" | "TypeScript") COLOR='\033[0;35m';;
 
-    # Magenta
-    "C#" | "TypeScript") COLOR='\033[0;35m';;
+        # Light Gray
+        "C") COLOR='\033[0;37m';;
 
-    # Light Gray
-    "C") COLOR='\033[0;37m';;
+        # Bright yellow
+        "JavaScript") COLOR='\033[0;93m';;
 
-    # Bright yellow
-    "JavaScript") COLOR='\033[0;93m';;
+        # Other (bright yellow)
+        *) COLOR='\033[0;93m';;
 
-esac
+    esac
+}
+GET_COLOR "$PRIMARY_LANGUAGE"
 
 # Title
 for i in $(seq 1 $((${#FULL_NAME} + ${#ID} + 7)));
@@ -89,3 +114,16 @@ echo -e "${COLOR}Stars:${NC} $STARS"
 
 # Watchers
 echo -e "${COLOR}Watchers:${NC} $WATCHERS"
+
+# Languages
+for LANGUAGE in $LANGUAGE_KEYS;
+do
+
+    PERCENT=$(echo "$LANGUAGES" | jq ".$LANGUAGE")
+    if [ "$PERCENT" == 0 ]; then PERCENT="<0.01"; fi
+
+    GET_COLOR "$LANGUAGE"
+    echo -e "${COLOR}$LANGUAGE:${NC} $PERCENT%"
+
+done
+GET_COLOR "$PRIMARY_LANGUAGE"
