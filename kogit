@@ -42,7 +42,7 @@ STARS=$(echo "$RESULT" | jq -r ".stargazers_count")
 WATCHERS=$(echo "$RESULT" | jq -r ".watchers_count")
 PRIMARY_LANGUAGE=$(echo "$RESULT" | jq -r ".language")
 PRIVATE=$(echo "$RESULT" | jq -r ".private")
-CREATED_AT=$(echo "$RESULT" | jq -r ".created_at")
+CREATED_ON=$(echo "$RESULT" | jq -r ".created_at")
 
 # Define no color var + formatting function
 NC='\033[0m'
@@ -123,11 +123,13 @@ else
 
 fi
 
-# Privacy + created at
-PRIVACY_CREATED_AT="Privacy: $PRIVACY     Created At: $CREATED_AT"
-PRIVACY_CREATED_AT_SPACES=""
-for i in $(seq 1 $(( ($(tput cols) / 2) - (${#PRIVACY_CREATED_AT} / 2) ))); do PRIVACY_CREATED_AT_SPACES="$PRIVACY_CREATED_AT_SPACES "; done
-echo -e "$PRIVACY_CREATED_AT_SPACES${COLOR}Privacy:${NC} $PRIVACY     ${COLOR}Created At:${NC} $CREATED_AT"
+# Privacy + created on
+CREATED_ON=$(date -d $CREATED_ON "+%A, %B %d, %Y")
+
+PRIVACY_CREATED_ON="Privacy: $PRIVACY     Created On: $CREATED_ON"
+PRIVACY_CREATED_ON_SPACES=""
+for i in $(seq 1 $(( ($(tput cols) / 2) - (${#PRIVACY_CREATED_ON} / 2) ))); do PRIVACY_CREATED_ON_SPACES="$PRIVACY_CREATED_ON_SPACES "; done
+echo -e "$PRIVACY_CREATED_ON_SPACES${COLOR}Privacy:${NC} $PRIVACY     ${COLOR}Created On:${NC} $CREATED_ON"
 echo
 
 # Primary Language
