@@ -40,6 +40,7 @@ DESCRIPTION=$(echo "$RESULT" | jq -r ".description")
 WEBSITE=$(echo "$RESULT" | jq -r ".homepage")
 STARS=$(echo "$RESULT" | jq -r ".stargazers_count")
 WATCHERS=$(echo "$RESULT" | jq -r ".subscribers_count")
+FORKS=$(echo "$RESULT" | jq -r ".forks_count")
 PRIMARY_LANGUAGE=$(echo "$RESULT" | jq -r ".language")
 PRIVATE=$(echo "$RESULT" | jq -r ".private")
 CREATED_ON=$(echo "$RESULT" | jq -r ".created_at")
@@ -105,11 +106,11 @@ for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 echo -e "$SPACES${COLOR}$WEBSITE${NC}"
 echo; echo
 
-# Stars + watchers
-STARS_WATCHERS="Stars: $STARS     Watchers: $WATCHERS"
-STARS_WATCHERS_SPACES=""
-for i in $(seq 1 $(( ($(tput cols) / 2) - (${#STARS_WATCHERS} / 2) ))); do STARS_WATCHERS_SPACES="$STARS_WATCHERS_SPACES "; done
-echo -e "$STARS_WATCHERS_SPACES${COLOR}Stars:${NC} $STARS     ${COLOR}Watchers:${NC} $WATCHERS"
+# Stars + watchers + forks
+STARS_WATCHERS_FORKS="Stars: $STARS     Watchers: $WATCHERS     Forks: $FORKS"
+STARS_WATCHERS_FORKS_SPACES=""
+for i in $(seq 1 $(( ($(tput cols) / 2) - (${#STARS_WATCHERS_FORKS} / 2) ))); do STARS_WATCHERS_FORKS_SPACES="$STARS_WATCHERS_FORKS_SPACES "; done
+echo -e "$STARS_WATCHERS_FORKS_SPACES${COLOR}Stars:${NC} $STARS     ${COLOR}Watchers:${NC} $WATCHERS     ${COLOR}Forks:${NC} $FORKS"
 echo
 
 # Define privacy
