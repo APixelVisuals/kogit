@@ -85,6 +85,14 @@ echo -e "$SPACES  ${COLOR}$FULL_NAME ($ID)${NC}"
 echo "$SPACES$BORDER"
 
 # Description
+if [ "$DESCRIPTION" == "null" ]; then
+
+    DESCRIPTION="No description"
+    DESCRIPTION_FORMATTING="\e[3m"
+    DESCRIPTION_FORMATTING_END="\e[0m"
+
+fi
+
 DESCRIPTION_LINES_COUNT=$(( ${#DESCRIPTION} / $(tput cols) ))
 
 if (( ${#DESCRIPTION} >= $(tput cols) )); then DESCRIPTION_FIRST_LINES=$(echo $DESCRIPTION | cut -c -$(( ${DESCRIPTION_LINES_COUNT%.*} * $(tput cols) ))); fi
@@ -96,14 +104,22 @@ for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 
 echo
 if (( ${#DESCRIPTION} >= $(tput cols) )); then echo "$DESCRIPTION_FIRST_LINES"; fi
-echo "$SPACES$DESCRIPTION_LAST_LINE"
+echo -e "$SPACES${DESCRIPTION_FORMATTING}$DESCRIPTION_LAST_LINE${DESCRIPTION_FORMATTING_END}"
 
 # Website
+if [ "$WEBSITE" == "" ]; then
+
+    WEBSITE="No website"
+    WEBSITE_FORMATTING="\e[3m"
+    WEBSITE_FORMATTING_END="\e[0m"
+
+fi
+
 SPACES_LENGTH=$(( ($(tput cols) / 2) - (${#WEBSITE} / 2) ))
 SPACES=""
 for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 
-echo -e "$SPACES${COLOR}$WEBSITE${NC}"
+echo -e "$SPACES${COLOR}${WEBSITE_FORMATTING}$WEBSITE${WEBSITE_FORMATTING_END}${NC}"
 echo; echo
 
 # Stars + watchers + forks
@@ -133,9 +149,17 @@ for i in $(seq 1 $(( ($(tput cols) / 2) - (${#PRIVACY_CREATED_ON} / 2) ))); do P
 echo -e "$PRIVACY_CREATED_ON_SPACES${COLOR}Privacy:${NC} $PRIVACY     ${COLOR}Created On:${NC} $CREATED_ON"
 echo
 
-# Primary Language
+# Primary language
+if [ "$PRIMARY_LANGUAGE" == "null" ]; then
+
+    PRIMARY_LANGUAGE="No primary language"
+    PRIMARY_LANGUAGE_FORMATTING="\e[3m"
+    PRIMARY_LANGUAGE_FORMATTING_END="\e[0m"
+
+fi
+
 SPACES_LENGTH=$(( ($(tput cols) / 2) - (${#PRIMARY_LANGUAGE} / 2) ))
 SPACES=""
 for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 
-echo -e "$SPACES${COLOR}$PRIMARY_LANGUAGE${NC}"
+echo -e "$SPACES${COLOR}${PRIMARY_LANGUAGE_FORMATTING}$PRIMARY_LANGUAGE${PRIMARY_LANGUAGE_FORMATTING_END}${NC}"
