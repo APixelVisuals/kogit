@@ -32,7 +32,6 @@ ACCESS_TOKEN=$(cat ~/.config/kogit/access-token)
 
 # Make requests
 RESULT=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1)
-LANGUAGES=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1/languages)
 
 # Define vars
 ID=$(echo "$RESULT" | jq -r ".id")
@@ -44,55 +43,32 @@ WATCHERS=$(echo "$RESULT" | jq -r ".watchers_count")
 PRIMARY_LANGUAGE=$(echo "$RESULT" | jq -r ".language")
 PRIVATE=$(echo "$RESULT" | jq -r ".private")
 
-# Set language percents
-LANGUAGE_KEYS=$(echo "$LANGUAGES" | jq -r "keys[]")
-TOTAL_BYTES=0
-
-for LANGUAGE in $LANGUAGE_KEYS;
-do
-
-    TOTAL_BYTES=$(($TOTAL_BYTES + $(echo "$LANGUAGES" | jq ".$LANGUAGE")))
-
-done
-
-for LANGUAGE in $LANGUAGE_KEYS;
-do
-
-    PERCENT=$(echo "scale=5; $(echo "$LANGUAGES" | jq ".$LANGUAGE") / $TOTAL_BYTES * 100" | bc)
-    printf -v PERCENT "%.2f" "$PERCENT"
-    LANGUAGES=$(echo "$LANGUAGES" | jq ".$LANGUAGE = $PERCENT")
-
-done
-
 # Define no color var + formatting function
 NC='\033[0m'
-GET_COLOR() {
-    case "$1" in
+case $PRIMARY_LANGUAGE in
 
-        # Red
-        "HTML") COLOR='\033[0;31m';;
+    # Red
+    "HTML") COLOR='\033[0;31m';;
 
-        # Yellow
-        "Java") COLOR='\033[0;33m';;
+    # Yellow
+    "Java") COLOR='\033[0;33m';;
 
-        # Blue
-        "CSS" | "TypeScript" | "Python" | "C++") COLOR='\033[0;34m';;
+    # Blue
+    "CSS" | "TypeScript" | "Python" | "C++") COLOR='\033[0;34m';;
 
-        # Magenta
-        "C#" | "TypeScript") COLOR='\033[0;35m';;
+    # Magenta
+    "C#" | "TypeScript") COLOR='\033[0;35m';;
 
-        # Light Gray
-        "C") COLOR='\033[0;37m';;
+    # Light Gray
+    "C") COLOR='\033[0;37m';;
 
-        # Bright yellow
-        "JavaScript") COLOR='\033[0;93m';;
+    # Bright yellow
+    "JavaScript") COLOR='\033[0;93m';;
 
-        # Other (bright yellow)
-        *) COLOR='\033[0;93m';;
+    # Other (bright yellow)
+    *) COLOR='\033[0;93m';;
 
-    esac
-}
-GET_COLOR "$PRIMARY_LANGUAGE"
+esac
 
 # Title
 BORDER_LENGTH=$((${#FULL_NAME} + ${#ID} + 7))
@@ -119,7 +95,7 @@ for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 echo
 if (( ${#DESCRIPTION} >= $(tput cols) )); then echo "$DESCRIPTION_FIRST_LINES"; fi
 echo "$SPACES$DESCRIPTION_LAST_LINE"
-echo
+echo; echo
 
 # Stars + watchers
 STARS_WATCHERS="Stars: $STARS     Watchers: $WATCHERS"
@@ -127,15 +103,10 @@ STARS_WATCHERS_SPACES=""
 for i in $(seq 1 $(( ($(tput cols) / 2) - (${#STARS_WATCHERS} / 2) ))); do STARS_WATCHERS_SPACES="$STARS_WATCHERS_SPACES "; done
 echo -e "$STARS_WATCHERS_SPACES${COLOR}Stars:${NC} $STARS     ${COLOR}Watchers:${NC} $WATCHERS"
 
-# Languages
-for LANGUAGE in $LANGUAGE_KEYS;
-do
+# Primary Language
+SPACES_LENGTH=$(( ($(tput cols) / 2) - (${#PRIMARY_LANGUAGE} / 2) ))
+SPACES=""
+for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 
-    PERCENT=$(echo "$LANGUAGES" | jq ".$LANGUAGE")
-    if [ "$PERCENT" == 0 ]; then PERCENT="<0.01"; fi
-
-    GET_COLOR "$LANGUAGE"
-    echo -e "${COLOR}$LANGUAGE:${NC} $PERCENT%"
-
-done
-GET_COLOR "$PRIMARY_LANGUAGE"
+echo
+echo -e "$SPACES${COLOR}$PRIMARY_LANGUAGE${NC}"
