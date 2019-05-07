@@ -42,6 +42,7 @@ STARS=$(echo "$RESULT" | jq -r ".stargazers_count")
 WATCHERS=$(echo "$RESULT" | jq -r ".watchers_count")
 PRIMARY_LANGUAGE=$(echo "$RESULT" | jq -r ".language")
 PRIVATE=$(echo "$RESULT" | jq -r ".private")
+CREATED_AT=$(echo "$RESULT" | jq -r ".created_at")
 
 # Define no color var + formatting function
 NC='\033[0m'
@@ -95,6 +96,13 @@ for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 echo
 if (( ${#DESCRIPTION} >= $(tput cols) )); then echo "$DESCRIPTION_FIRST_LINES"; fi
 echo "$SPACES$DESCRIPTION_LAST_LINE"
+
+# Website
+SPACES_LENGTH=$(( ($(tput cols) / 2) - (${#WEBSITE} / 2) ))
+SPACES=""
+for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
+
+echo -e "$SPACES${COLOR}$WEBSITE${NC}"
 echo; echo
 
 # Stars + watchers
@@ -102,11 +110,29 @@ STARS_WATCHERS="Stars: $STARS     Watchers: $WATCHERS"
 STARS_WATCHERS_SPACES=""
 for i in $(seq 1 $(( ($(tput cols) / 2) - (${#STARS_WATCHERS} / 2) ))); do STARS_WATCHERS_SPACES="$STARS_WATCHERS_SPACES "; done
 echo -e "$STARS_WATCHERS_SPACES${COLOR}Stars:${NC} $STARS     ${COLOR}Watchers:${NC} $WATCHERS"
+echo
+
+# Define privacy
+if [ $PRIVATE == "true" ]; then
+
+    PRIVACY="Private"
+
+else
+
+    PRIVACY="Public"
+
+fi
+
+# Privacy + created at
+PRIVACY_CREATED_AT="Privacy: $PRIVACY     Created At: $CREATED_AT"
+PRIVACY_CREATED_AT_SPACES=""
+for i in $(seq 1 $(( ($(tput cols) / 2) - (${#PRIVACY_CREATED_AT} / 2) ))); do PRIVACY_CREATED_AT_SPACES="$PRIVACY_CREATED_AT_SPACES "; done
+echo -e "$PRIVACY_CREATED_AT_SPACES${COLOR}Privacy:${NC} $PRIVACY     ${COLOR}Created At:${NC} $CREATED_AT"
+echo
 
 # Primary Language
 SPACES_LENGTH=$(( ($(tput cols) / 2) - (${#PRIMARY_LANGUAGE} / 2) ))
 SPACES=""
 for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
 
-echo
 echo -e "$SPACES${COLOR}$PRIMARY_LANGUAGE${NC}"
