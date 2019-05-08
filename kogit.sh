@@ -24,12 +24,12 @@ if [ "$ACCESS_TOKEN" == "null" ]; then
 
 fi
 
-# Clear screen
-clear
-
 # Fetch data
 source ./modules/fetchData.sh
 FETCH_DATA $1
+
+# Clear screen
+clear
 
 # Get formatters
 source ./modules/getFormatters.sh
