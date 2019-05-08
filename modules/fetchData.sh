@@ -20,6 +20,14 @@ function FETCH_DATA() {
 
     fi
 
+    # Rate limited
+    if [[ "$ERROR" == "API rate limit exceeded"* ]]; then
+
+        echo "You have hit a rate limit"
+        exit
+
+    fi
+
     # Define vars
     ID=$(echo "$RESULT" | jq -r ".id")
     FULL_NAME=$(echo "$RESULT" | jq -r ".full_name")
