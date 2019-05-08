@@ -1,23 +1,23 @@
 #!/bin/bash
 
-# Make config directory
-if [ ! -d ~/.config/kogit/ ]; then
+# Make config file
+if [ ! -f ~/.config/kogit/config.json ]; then
 
     mkdir -p ~/.config/kogit/
+    echo "{}" > ~/.config/kogit/config.json
 
 fi
+
+# Read config file
+CONFIG=$(cat ~/.config/kogit/config.json)
+ACCESS_TOKEN=$(echo "$CONFIG" | jq -r ".accessToken")
 
 # Set token
-if [ "$1" == "-t" ] || [ "$1" == "--token" ]; then
-
-    echo "$2" > ~/.config/kogit/access-token
-    echo "Your GitHub access token has been set"
-    exit
-
-fi
+source ./modules/setToken.sh
+if [ "$1" == "-t" ] || [ "$1" == "--token" ]; then SET_TOKEN $2; fi
 
 # No access token
-if [ ! -f ~/.config/kogit/access-token ]; then
+if [ "$ACCESS_TOKEN" == "null" ]; then
 
     echo "You don't have a GitHub access token set. You can set one by using \`kogit -t ACCESS_TOKEN\`"
     exit
@@ -26,9 +26,6 @@ fi
 
 # Clear screen
 clear
-
-# Read config files
-ACCESS_TOKEN=$(cat ~/.config/kogit/access-token)
 
 # Fetch data
 source ./modules/fetchData.sh
