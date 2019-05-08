@@ -30,136 +30,34 @@ clear
 # Read config files
 ACCESS_TOKEN=$(cat ~/.config/kogit/access-token)
 
-# Make requests
-RESULT=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1)
+# Fetch data
+source ./modules/fetchData.sh
+FETCH_DATA $1
 
-# Define vars
-ID=$(echo "$RESULT" | jq -r ".id")
-FULL_NAME=$(echo "$RESULT" | jq -r ".full_name")
-DESCRIPTION=$(echo "$RESULT" | jq -r ".description")
-WEBSITE=$(echo "$RESULT" | jq -r ".homepage")
-STARS=$(echo "$RESULT" | jq -r ".stargazers_count")
-WATCHERS=$(echo "$RESULT" | jq -r ".subscribers_count")
-FORKS=$(echo "$RESULT" | jq -r ".forks_count")
-PRIMARY_LANGUAGE=$(echo "$RESULT" | jq -r ".language")
-PRIVATE=$(echo "$RESULT" | jq -r ".private")
-CREATED_ON=$(echo "$RESULT" | jq -r ".created_at")
-
-# Define no color var + formatting function
-NC='\033[0m'
-case $PRIMARY_LANGUAGE in
-
-    # Red
-    "HTML") COLOR='\033[0;31m';;
-
-    # Yellow
-    "Java") COLOR='\033[0;33m';;
-
-    # Blue
-    "CSS" | "TypeScript" | "Python" | "C++") COLOR='\033[0;34m';;
-
-    # Magenta
-    "C#" | "TypeScript") COLOR='\033[0;35m';;
-
-    # Light Gray
-    "C") COLOR='\033[0;37m';;
-
-    # Bright yellow
-    "JavaScript") COLOR='\033[0;93m';;
-
-    # Other (bright yellow)
-    *) COLOR='\033[0;93m';;
-
-esac
+# Get formatters
+source ./modules/getFormatters.sh
+GET_FORMATTERS
 
 # Title
-BORDER_LENGTH=$((${#FULL_NAME} + ${#ID} + 7))
-SPACES_LENGTH=$(( ($(tput cols) / 2) - ($BORDER_LENGTH / 2) ))
-BORDER=""
-SPACES=""
-for i in $(seq 1 $BORDER_LENGTH); do BORDER="$BORDER="; done
-for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
-
-echo "$SPACES$BORDER"
-echo -e "$SPACES  ${COLOR}$FULL_NAME ($ID)${NC}"
-echo "$SPACES$BORDER"
+source ./modules/printers/title.sh
+PRINT_TITLE
 
 # Description
-if [ "$DESCRIPTION" == "null" ]; then
-
-    DESCRIPTION="No description"
-    DESCRIPTION_FORMATTING="\e[3m"
-    DESCRIPTION_FORMATTING_END="\e[0m"
-
-fi
-
-DESCRIPTION_LINES_COUNT=$(( ${#DESCRIPTION} / $(tput cols) ))
-
-if (( ${#DESCRIPTION} >= $(tput cols) )); then DESCRIPTION_FIRST_LINES=$(echo $DESCRIPTION | cut -c -$(( ${DESCRIPTION_LINES_COUNT%.*} * $(tput cols) ))); fi
-DESCRIPTION_LAST_LINE=$(echo $DESCRIPTION | cut -c $(( (${DESCRIPTION_LINES_COUNT%.*} * $(tput cols)) + 1 ))-)
-
-SPACES_LENGTH=$(( ($(tput cols) / 2) - (${#DESCRIPTION_LAST_LINE} / 2) ))
-SPACES=""
-for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
-
-echo
-if (( ${#DESCRIPTION} >= $(tput cols) )); then echo "$DESCRIPTION_FIRST_LINES"; fi
-echo -e "$SPACES${DESCRIPTION_FORMATTING}$DESCRIPTION_LAST_LINE${DESCRIPTION_FORMATTING_END}"
+source ./modules/printers/description.sh
+PRINT_DESCRIPTION
 
 # Website
-if [ "$WEBSITE" == "" ]; then
+source ./modules/printers/website.sh
+PRINT_WEBSITE
 
-    WEBSITE="No website"
-    WEBSITE_FORMATTING="\e[3m"
-    WEBSITE_FORMATTING_END="\e[0m"
+# Stats
+source ./modules/printers/stats.sh
+PRINT_STATS
 
-fi
-
-SPACES_LENGTH=$(( ($(tput cols) / 2) - (${#WEBSITE} / 2) ))
-SPACES=""
-for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
-
-echo -e "$SPACES${COLOR}${WEBSITE_FORMATTING}$WEBSITE${WEBSITE_FORMATTING_END}${NC}"
-echo; echo
-
-# Stars + watchers + forks
-STARS_WATCHERS_FORKS="Stars: $STARS     Watchers: $WATCHERS     Forks: $FORKS"
-STARS_WATCHERS_FORKS_SPACES=""
-for i in $(seq 1 $(( ($(tput cols) / 2) - (${#STARS_WATCHERS_FORKS} / 2) ))); do STARS_WATCHERS_FORKS_SPACES="$STARS_WATCHERS_FORKS_SPACES "; done
-echo -e "$STARS_WATCHERS_FORKS_SPACES${COLOR}Stars:${NC} $STARS     ${COLOR}Watchers:${NC} $WATCHERS     ${COLOR}Forks:${NC} $FORKS"
-echo
-
-# Define privacy
-if [ $PRIVATE == "true" ]; then
-
-    PRIVACY="Private"
-
-else
-
-    PRIVACY="Public"
-
-fi
-
-# Privacy + created on
-CREATED_ON=$(date -d $CREATED_ON "+%A, %B %d, %Y")
-
-PRIVACY_CREATED_ON="Privacy: $PRIVACY     Created On: $CREATED_ON"
-PRIVACY_CREATED_ON_SPACES=""
-for i in $(seq 1 $(( ($(tput cols) / 2) - (${#PRIVACY_CREATED_ON} / 2) ))); do PRIVACY_CREATED_ON_SPACES="$PRIVACY_CREATED_ON_SPACES "; done
-echo -e "$PRIVACY_CREATED_ON_SPACES${COLOR}Privacy:${NC} $PRIVACY     ${COLOR}Created On:${NC} $CREATED_ON"
-echo
+# Details
+source ./modules/printers/details.sh
+PRINT_DETAILS
 
 # Primary language
-if [ "$PRIMARY_LANGUAGE" == "null" ]; then
-
-    PRIMARY_LANGUAGE="No primary language"
-    PRIMARY_LANGUAGE_FORMATTING="\e[3m"
-    PRIMARY_LANGUAGE_FORMATTING_END="\e[0m"
-
-fi
-
-SPACES_LENGTH=$(( ($(tput cols) / 2) - (${#PRIMARY_LANGUAGE} / 2) ))
-SPACES=""
-for i in $(seq 1 $SPACES_LENGTH); do SPACES="$SPACES "; done
-
-echo -e "$SPACES${COLOR}${PRIMARY_LANGUAGE_FORMATTING}$PRIMARY_LANGUAGE${PRIMARY_LANGUAGE_FORMATTING_END}${NC}"
+source ./modules/printers/primaryLanguage.sh
+PRINT_PRIMARY_LANGUAGE
