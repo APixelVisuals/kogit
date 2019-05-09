@@ -16,7 +16,7 @@ Kogit is a small CLI application written fully in Bash. Its goal is to get infor
 - Support for a GitHub access token to enable viewing your private repos and a better ratelimit
 
 # Installation
-1. Download the [latest release](xxx)
+1. Download the [latest release](https://github.com/APixelVisuals/kogit/archive/0.1.tar.gz)
 2. Extract the tarball
 3. Run `make` in the extracted directory
 
