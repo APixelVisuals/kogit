@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Make config file
-if [ ! -f ~/.config/kogit/config.json ]; then
+if [ ! -f $HOME/.config/kogit/config.json ]; then
 
-    mkdir -p ~/.config/kogit/
-    echo "{}" > ~/.config/kogit/config.json
+    mkdir -p $HOME/.config/kogit/
+    echo "{}" > $HOME/.config/kogit/config.json
 
 fi
 
 # Read config file
-CONFIG=$(cat ~/.config/kogit/config.json)
+CONFIG=$(cat $HOME/.config/kogit/config.json)
 ACCESS_TOKEN=$(echo "$CONFIG" | jq -r ".accessToken")
 
 # Set token

@@ -5,7 +5,7 @@ function SET_TOKEN() {
     CONFIG=$(echo "$CONFIG" | jq '.accessToken = env.ACCESS_TOKEN')
 
     # Save config file
-    echo "$CONFIG" > ~/.config/kogit/config.json
+    echo "$CONFIG" > $HOME/.config/kogit/config.json
 
     # Confirm
     echo "Your GitHub access token has been set"
