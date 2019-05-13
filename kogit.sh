@@ -8,6 +8,30 @@ if [ ! -f $HOME/.config/kogit/config.json ]; then
 
 fi
 
+# Check dependencies
+source "$(dirname "$0")/kogit-modules/checkDependencies.sh"
+if [ "$1" == "-i" ] || [ "$1" == "--install" ]; then CHECK_DEPENDENCIES 1; else
+
+    CHECK_DEPENDENCIES
+
+    # Print unmet dependencies
+    if (( ${#UNMET_DEPENDENCIES[@]} > 0 )); then
+
+        echo "The following dependencies need to be installed:"
+        echo
+
+        for DEPENDENCY in ${UNMET_DEPENDENCIES[@]}; do
+            echo "$DEPENDENCY"
+        done
+
+        echo
+        echo "Run \`kogit -i\` to install them"
+
+        exit
+
+    fi
+fi
+
 # Read config file
 CONFIG=$(cat $HOME/.config/kogit/config.json)
 ACCESS_TOKEN=$(echo "$CONFIG" | jq -r ".accessToken")
