@@ -19,7 +19,7 @@ Kogit is a small CLI application written fully in Bash. Its goal is to get infor
 
 <h1 align="center">Installation</h1>
 
-1. Download the [latest release](https://github.com/APixelVisuals/kogit/archive/0.1.tar.gz)
+1. Download the [latest release](https://github.com/APixelVisuals/kogit/releases/latest)
 2. Extract the tarball
 3. Run `make` in the extracted directory
 
