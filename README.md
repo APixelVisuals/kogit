@@ -28,7 +28,7 @@ Kogit is a small CLI application written fully in Bash. Its goal is to get infor
 ### Set a GitHub access token
 Run the Kogit command with the `-t` or `--token` flag:
 ```
-$ kogit -t MY_GITHUB_ACCESS_TOKEN
+$ kogit -t ACCESS_TOKEN
 ```
 
 ### Fetch repo details
