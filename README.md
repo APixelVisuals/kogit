@@ -1,4 +1,4 @@
-<h1 align="center">Kogit</h1>
+<p align="center"><img src="./assets/title.png" alt="Title" height="100px" /></p>
 
 Kogit is a small CLI application written fully in Bash. Its goal is to get information about a given GitHub repository and display its details in a pleasing manner. Kogit does this by formatting the output to look more appealing, such as using color and dynamic spacing.
 
