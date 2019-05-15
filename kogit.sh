@@ -40,14 +40,6 @@ ACCESS_TOKEN=$(echo "$CONFIG" | jq -r ".accessToken")
 source "$(dirname "$0")/kogit-modules/setToken.sh"
 if [ "$1" == "-t" ] || [ "$1" == "--token" ]; then SET_TOKEN $2; fi
 
-# No access token
-if [ "$ACCESS_TOKEN" == "null" ]; then
-
-    echo "You don't have a GitHub access token set. You can set one by using \`kogit -t ACCESS_TOKEN\`"
-    exit
-
-fi
-
 # Fetch data
 source "$(dirname "$0")/kogit-modules/fetchData.sh"
 FETCH_DATA $1

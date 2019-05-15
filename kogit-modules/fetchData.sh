@@ -1,7 +1,8 @@
 function FETCH_DATA() {
 
     # Make request
-    RESULT=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1)
+    if [ "$ACCESS_TOKEN" == "null" ]; then RESULT=$(curl -s https://api.github.com/repos/$1)
+    else RESULT=$(curl -sH "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/$1); fi
     ERROR=$(echo "$RESULT" | jq -r ".message")
 
     # Invalid access token
@@ -23,7 +24,8 @@ function FETCH_DATA() {
     # Rate limited
     if [[ "$ERROR" == "API rate limit exceeded"* ]]; then
 
-        echo "You have hit a rate limit"
+        if [ "$ACCESS_TOKEN" == "null" ]; then echo "You have hit the rate limit, however, you can set a GitHub access token in order to have a better rate limit by using \`kogit -t ACCESS_TOKEN\`"
+        else echo "You have hit the rate limit"; fi
         exit
 
     fi
