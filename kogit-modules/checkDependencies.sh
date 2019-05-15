@@ -7,8 +7,7 @@ function CHECK_DEPENDENCIES() {
     # Get package management functions
     case $OS in
 
-        # *"Ubuntu"* | *"Linux Mint"* | *"Debian"* | *"elementary"* | *"Zorin OS"*)
-        *"Ubuntu"* | *"Debian"* | *"elementary"* | *"Zorin OS"*)
+        *"Ubuntu"* | *"Linux Mint"* | *"Debian"* | *"elementary"* | *"Zorin OS"*)
 
             IS_INSTALLED() {
                 if [ "$(dpkg-query -Wf '${Status}' $1 2>/dev/null)" == "install ok installed" ]; then INSTALLED=1; else INSTALLED=0; fi
@@ -89,6 +88,8 @@ function CHECK_DEPENDENCIES() {
         else
             echo "There are no unmet dependencies"
         fi
+
+        exit
 
     fi
 }
