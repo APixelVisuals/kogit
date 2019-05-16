@@ -8,6 +8,12 @@ if [ ! -f $HOME/.config/kogit/config.json ]; then
 
 fi
 
+# Clear screen
+clear
+
+# Misc modules
+source "$(dirname "$0")/kogit-modules/error.sh"
+
 # Check dependencies
 source "$(dirname "$0")/kogit-modules/checkDependencies.sh"
 if [ "$1" == "-i" ] || [ "$1" == "--install" ]; then CHECK_DEPENDENCIES 1; else
@@ -43,9 +49,6 @@ if [ "$1" == "-t" ] || [ "$1" == "--token" ]; then SET_TOKEN $2; fi
 # Fetch data
 source "$(dirname "$0")/kogit-modules/fetchData.sh"
 FETCH_DATA $1
-
-# Clear screen
-clear
 
 # Get formatters
 source "$(dirname "$0")/kogit-modules/getFormatters.sh"

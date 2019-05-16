@@ -86,7 +86,7 @@ function CHECK_DEPENDENCIES() {
             done
 
         else
-            echo "There are no unmet dependencies"
+            ERROR "There are no unmet dependencies"
         fi
 
         exit
