@@ -13,6 +13,7 @@ clear
 
 # Misc modules
 source "$(dirname "$0")/kogit-modules/error.sh"
+source "$(dirname "$0")/kogit-modules/rateLimitError.sh"
 
 # Check dependencies
 source "$(dirname "$0")/kogit-modules/checkDependencies.sh"
