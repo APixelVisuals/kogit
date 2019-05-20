@@ -13,7 +13,7 @@ function GET_FORMATTERS() {
         "Java" | "Swift") COLOR='\033[0;33m';;
 
         # Blue
-        "CSS" | "TypeScript" | "Python" | "C++" | "PHP" | "JSONiq" | "CoffeeScript" | "Lua" | "Perl" | "R") COLOR='\033[0;34m';;
+        "CSS" | "TypeScript" | "Python" | "C++" | "PHP" | "JSONiq" | "CoffeeScript" | "Lua" | "Perl" | "R" | "Assembly") COLOR='\033[0;34m';;
 
         # Magenta
         "C#" | "TypeScript") COLOR='\033[0;35m';;
