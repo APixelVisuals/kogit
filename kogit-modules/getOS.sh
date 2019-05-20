@@ -1,4 +1,0 @@
-function GET_OS() {
-
-    # 
-}
