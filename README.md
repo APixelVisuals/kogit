@@ -25,15 +25,15 @@ Kogit is a small CLI application written fully in Bash. Its goal is to get infor
 
 <h1 align="center">Usage</h1>
 
+### Fetch repo details
+```
+$ kogit APixelVisuals/kogit
+```
+
 ### Set a GitHub access token
 Setting an access token is optional, but gives you a much higher rate limit. To set one, run the Kogit command with the `-t` or `--token` flag:
 ```
 $ kogit -t ACCESS_TOKEN
-```
-
-### Fetch repo details
-```
-$ kogit APixelVisuals/kogit
 ```
 
 ---
