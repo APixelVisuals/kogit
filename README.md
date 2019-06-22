@@ -53,4 +53,4 @@ $ kogit -t ACCESS_TOKEN
 <p align="center">Kogit is inspired by <a href="https://github.com/dylanaraps/neofetch">Neofetch</a> ❤</p>
 
 <h2 align="center">License</h2>
-<p align="center">MIT</p>
+<p align="center"><a href="./LICENSE">MIT</a></p>
