@@ -36,7 +36,7 @@ Setting an access token is optional, but gives you a much higher rate limit. Her
 1. Go to your [GitHub Settings](https://github.com/settings/profile)
 2. Click on [Developer Settings](https://github.com/settings/apps)
 3. Click on [Personal Access Tokens](https://github.com/settings/tokens)
-4. Click `Generate New Token`. GitHub might prompt you to enter your password.
+4. Click `Generate New Token` (GitHub might prompt you to enter your password)
 5. Enable the `repo` scope
 6. Click `Generate Token` at the bottom
 7. Copy your new access token and run the Kogit command with the `-t` or `--token` flag:
